@@ -26,6 +26,7 @@ public class EsQuery {
 
     /**
      * 查询
+     *
      * @param queryBuilder
      * @param indexName
      * @param indexType
@@ -33,12 +34,12 @@ public class EsQuery {
      * @param row
      * @return
      */
-    public static SearchResponse getSearchResponse(QueryBuilder queryBuilder, String indexName, String indexType, int start, int row){
+    public static SearchResponse getSearchResponse(QueryBuilder queryBuilder, String indexName, String indexType, int start, int row) {
 
         long begin = System.currentTimeMillis();
         Client client = EsClient.getEsConnection();
         long end = System.currentTimeMillis();
-        System.out.println("连接ES所需时间："+(end-begin));
+        System.out.println("连接ES所需时间：" + (end - begin));
         SearchResponse searchResponse =
                 client.prepareSearch(indexName)
                         .setTypes(indexType)
@@ -50,7 +51,6 @@ public class EsQuery {
         client.close();
         return searchResponse;
     }
-
 
 
     /**
@@ -77,6 +77,7 @@ public class EsQuery {
 
     /**
      * 根据参数拼接queryBuilder
+     *
      * @param queryBuilder
      * @param field
      * @param value
@@ -89,14 +90,15 @@ public class EsQuery {
         if ("name".equals(field)) {
             queryBuilder.must(QueryBuilders.termsQuery(field, value));
         }
-        if("class".equals(field)){
-            queryBuilder.should(QueryBuilders.termsQuery(field,value));
+        if ("class".equals(field)) {
+            queryBuilder.should(QueryBuilders.termsQuery(field, value));
         }
         return queryBuilder;
     }
 
     /**
      * term query
+     *
      * @param term
      * @param value
      * @param client
@@ -104,9 +106,9 @@ public class EsQuery {
      * @param type
      * @return
      */
-    public SearchResponse termQuery(String term,String value,Client client,String index,String type){
+    public SearchResponse termQuery(String term, String value, Client client, String index, String type) {
         //term
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term,value);
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term, value);
         //response
         SearchResponse searchResponse = client.prepareSearch(index) //index
                 .setSearchType(type)    //document type
@@ -118,6 +120,7 @@ public class EsQuery {
 
     /**
      * order term query
+     *
      * @param term
      * @param value
      * @param client
@@ -127,9 +130,9 @@ public class EsQuery {
      * @param sortType
      * @return
      */
-    public SearchResponse termSortQuery(String term,String value,Client client,String index,String type,String sort,SortOrder sortType){
+    public SearchResponse termSortQuery(String term, String value, Client client, String index, String type, String sort, SortOrder sortType) {
 
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term,value);
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term, value);
         //set order field and type
         SortBuilder sortBuilder = SortBuilders.fieldSort(sort).order(sortType);
 
@@ -144,6 +147,7 @@ public class EsQuery {
 
     /**
      * order term page query
+     *
      * @param term
      * @param value
      * @param client
@@ -155,9 +159,9 @@ public class EsQuery {
      * @param size
      * @return
      */
-    public SearchResponse termSortAndPageQuery(String term, String value, Client client, String index, String type, String sortFiled, SortOrder sort, int from, int size){
+    public SearchResponse termSortAndPageQuery(String term, String value, Client client, String index, String type, String sortFiled, SortOrder sort, int from, int size) {
         //term
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term,value);
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term, value);
         //sort
         SortBuilder sortBuilder = SortBuilders.fieldSort(sortFiled).order(sort);
 
@@ -175,6 +179,7 @@ public class EsQuery {
 
     /**
      * sort page term query and return specified fields
+     *
      * @param client
      * @param term
      * @param value
@@ -187,9 +192,9 @@ public class EsQuery {
      * @param size
      * @return
      */
-    public SearchResponse fieldTermQuery(Client client,String term,String value,String index,String type,String sort,SortOrder order,List<String> fields,int from ,int size){
+    public SearchResponse fieldTermQuery(Client client, String term, String value, String index, String type, String sort, SortOrder order, List<String> fields, int from, int size) {
         //term
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term,value);
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(term, value);
         //sort
         SortBuilder sortBuilder = SortBuilders.fieldSort(sort).order(order);
 
@@ -204,13 +209,13 @@ public class EsQuery {
 
         SearchHits searchHits = searchResponse.getHits();
         long resultSize = searchHits.getTotalHits();
-        if(resultSize<=0){
+        if (resultSize <= 0) {
             return null;
         }
-        for(SearchHit hit:searchHits.getHits()){
-            Map<String,SearchHitField> map = hit.getFields();
+        for (SearchHit hit : searchHits.getHits()) {
+            Map<String, SearchHitField> map = hit.getFields();
             SearchHitField searchHitField = map.get("name");
-            System.out.println("name:"+searchHitField.getName()+"--------value:"+searchHitField.getValue());
+            System.out.println("name:" + searchHitField.getName() + "--------value:" + searchHitField.getValue());
         }
         return searchResponse;
     }

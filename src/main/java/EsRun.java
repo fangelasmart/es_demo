@@ -12,14 +12,14 @@ import java.util.Map;
  */
 public class EsRun {
     public static void main(String[] args) {
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put("name","lily");
-        map.put("class","001");
+        map.put("name", "lily");
+        map.put("class", "001");
 
         QueryBuilder queryBuilder = EsQuery.getQuery(map);
-        SearchResponse searchResponse = EsQuery.getSearchResponse(queryBuilder,"fq","teacher",1,10);
-        System.out.println("------------"+searchResponse.toString());
+        SearchResponse searchResponse = EsQuery.getSearchResponse(queryBuilder, "fq", "teacher", 1, 10);
+        System.out.println("------------" + searchResponse.toString());
 
     }
 }

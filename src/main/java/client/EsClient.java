@@ -13,7 +13,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 public class EsClient {
     private static Settings settings = null;
 
-    static{
+    static {
         try {
             EsPopertiesConfig conf = EsPopertiesConfig.getInstance();
             settings = ImmutableSettings.settingsBuilder()
@@ -25,15 +25,14 @@ public class EsClient {
 
 
             //System.out.println(conf.getClusterName()+"\t");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
     @SuppressWarnings("resource")
-    public static Client getEsConnection(){
+    public static Client getEsConnection() {
         EsPopertiesConfig conf = EsPopertiesConfig.getInstance();
         return new TransportClient(settings)
                 .addTransportAddress(new InetSocketTransportAddress(conf.getClusterIpAddress(), conf.getClusterPort()));
