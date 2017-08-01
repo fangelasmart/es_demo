@@ -31,7 +31,6 @@ public class EsClient {
         }
     }
 
-    @SuppressWarnings("resource")
     public static Client getEsConnection() {
         EsPopertiesConfig conf = EsPopertiesConfig.getInstance();
         return new TransportClient(settings)
